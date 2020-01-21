@@ -12,5 +12,3 @@ elasticsearch 版本 6.1.3
 maven 版本 3.6.0
 
 .gitignore 设置git提交时忽略的文件
-
-测试test
