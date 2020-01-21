@@ -1,0 +1,20 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /demo2
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/dhccdb?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  global-config:
+      db-config:
+        id-type: auto
+        field-strategy: not_empty
+        table-underline: true
+        db-type: mysql
+        logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+        logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)

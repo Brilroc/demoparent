@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status表示log4j2本身出错的日志信息打印级别，和下面的level，不是一个概念 -->
+<!--TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF-->
+<Configuration status="WARN">
+
+    <!-- 定义全局属性 -->
+    <properties>
+        <!-- 定义日志存储的路径，项目根目录 logs文件夹-->
+        <property name="FILE_PATH" value="logs" />
+    </properties>
+
+    <Appenders>
+        <!-- 用来定义输出到控制台的配置 -->
+        <Console name="ConsoleInfoLog" target="SYSTEM_OUT">
+            <!-- 设置控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch)-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            <!-- 设置输出格式,不设置默认为:%m%n -->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%xEx%n" />
+        </Console>
+
+        <Console name="ConsoleErrorLog" target="SYSTEM_OUT">
+            <!-- 设置控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch)-->
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <!-- 设置输出格式,不设置默认为:%m%n -->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%xEx%n" />
+        </Console>
+
+        <!-- INFO级别日志 按天输出到文件，归类到年月目录 -->
+        <RollingFile name="InfoRollingFileLog" fileName="${FILE_PATH}/info.log" filePattern="${FILE_PATH}/$${date:yyyyMM}/csmsearch-%d{yyyy-MM-dd}.log">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%xEx%n" />
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- ERROR级别日志 按天输出到文件，归类到年月目录 -->
+        <RollingFile name="ErrorRollingFileLog" fileName="${FILE_PATH}/error.log" filePattern="${FILE_PATH}/$${date:yyyyMM}/csmsearch-error.log-%d{yyyy-MM-dd}.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%xEx%n" />
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <!--每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <!--然后定义logger,只有定义了logger并引入的appender,appender才会生效-->
+    <Loggers>
+        <!-- 用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等，高于level才执行打印。 -->
+        <!--additivity = "false"表示不被Root再次记录-->
+        <logger name="dhcc.com.cn" level="ERROR" additivity="false">
+            <AppenderRef ref="ConsoleErrorLog" />
+            <AppenderRef ref="ErrorRollingFileLog" />
+        </logger>
+
+        <logger name="dhcc.com.cn" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleInfoLog" />
+            <AppenderRef ref="InfoRollingFileLog" />
+        </logger>
+
+        <!--Root节点用来指定项目的根日志，如果没有单独指定Logger，那么就会默认使用该Root日志输出-->
+        <!--<root level="all">
+            <appender-ref ref="ConsoleInfoLog"/>
+            <appender-ref ref="InfoRollingFileLog"/>
+            <appender-ref ref="ErrorRollingFileLog"/>
+        </root>-->
+    </Loggers>
+</Configuration>

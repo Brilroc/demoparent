@@ -1,0 +1,26 @@
+server:
+  port: 8089
+  #servlet: context-path: /demo2
+
+#thymelea
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
+#表示所有的访问都经过静态资源路径
+  mvc:
+    static-path-pattern: /**
+
+#覆盖默认配置，所以需要将默认的也加上否则static、public等这些路径将不能被当作静态资源路径
+  resources:
+    static-locations:  classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+
+#热部署
+  devtools:
+    restart:
+      enabled: true
+      freemarker:
+        cache: false
+debug: true

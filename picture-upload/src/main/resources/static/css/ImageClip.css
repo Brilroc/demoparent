@@ -1,0 +1,26 @@
+		body{
+			magrin:0;
+			padding: 0;
+			width: 500px;
+		}
+		.container{
+			magrin:0;
+			padding: 0;
+			width:500px;
+		}
+		#crop_area{
+			width:500px;
+			height: 300px;
+			margin-top: 4px;
+			margin-left: 4px;
+			border: 1px solid #B3B3B3;
+		}
+		#crop_img{
+			/*height: 300px;*/
+			/*width: 500px;*/
+			max-width: 500px;
+			max-height: 300px;
+		}
+		#crop_operation{
+			display: none;
+		}

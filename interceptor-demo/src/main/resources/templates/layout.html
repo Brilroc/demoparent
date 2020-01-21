@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>采用layout方式进行布局</title>
+</head>
+<body>
+    <header class="header">
+        <div>
+            这是layout头部
+        </div>
+    </header>
+    <div  class="container" layout:fragment="content"></div>
+    <footer class="footer">
+        <div>
+            这是layout尾部
+        </div>
+    </footer>
+</body>
+</html>

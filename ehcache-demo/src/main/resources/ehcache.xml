@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <!-- 磁盘缓存位置  user.home：用户的家目录。user.dir：用户的当前工作目录。java.io.tmpdir：Java临时目录。-->
+    <diskStore path="user.dir/ehcache-demo/ehcache"/>
+
+    <!-- 默认缓存 -->
+    <defaultCache
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            maxEntriesLocalDisk="10000000"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+        <persistence strategy="localTempSwap"/>
+    </defaultCache>
+
+    <!-- helloworld缓存 -->
+    <cache
+            name="HelloWorldCache"
+            maxElementsInMemory="1"
+            eternal="true"
+            timeToIdleSeconds="5"
+            timeToLiveSeconds="5"
+            overflowToDisk="true"
+            memoryStoreEvictionPolicy="LRU"/>
+    <!--<cache
+            &lt;!&ndash;缓存的名称，可以通过指定名称获取指定的某个Cache对象
+            name="HelloWorldCache"
+            &lt;!&ndash;内存中允许存储的最大的元素个数，0代表无限个&ndash;&gt;
+           maxElementsInMemory="1000"
+            &lt;!&ndash;设置缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期。&ndash;&gt;
+           eternal="false"
+            &lt;!&ndash;设置对象在失效前的允许闲置时间&ndash;&gt;
+           timeToIdleSeconds="5"
+            &lt;!&ndash;缓存数据的生存时间（TTL）&ndash;&gt;
+           timeToLiveSeconds="5"
+            &lt;!&ndash;内存不足时，是否启用磁盘缓存&ndash;&gt;
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>&ndash;&gt;-->
+</ehcache>

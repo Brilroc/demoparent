@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>头像上传</title>
+	<base th:href="${#request.getContextPath()}+'/'">
+	<link rel="stylesheet" type="text/css" href="../static/css/ImageClip.css"
+		  th:href="@{/css/ImageClip.css}"/>
+	<link rel="stylesheet" type="text/css" href="../static/Jcrop-0.9.12/css/jquery.Jcrop.css"
+		  th:href="@{/Jcrop-0.9.12/css/jquery.Jcrop.css}"/>
+	<link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"
+		  th:href="@{/layui/css/layui.css}"/>
+	<script src="../static/jQuery/jquery-1.12.4.js"
+			th:src="@{/jQuery/jquery-1.12.4.js}"></script>
+	<script src="../static/Jcrop-0.9.12/js/jquery.Jcrop.js"
+			th:src="@{/Jcrop-0.9.12/js/jquery.Jcrop.js}"></script>
+	<script src="../static/layui/layui.js"
+			th:src="@{/layui/layui.js}"></script>
+	<script src="../static/js/ImageClip.js"
+			th:src="@{/js/ImageClip.js}"></script>
+
+
+</head>
+<body>
+
+<div class="container">
+	<button type="button" class="layui-btn" onclick="openImgClip()">头像上传</button>
+
+	<script type="text/html" id="imgClip">
+	 <!--截取区-->
+	 <div id="crop_area">
+		 <img id="crop_img"/>
+	 </div>
+	</script>
+     
+     <div id="crop_operation">
+	     <!-- ajax form表单上传图片 回显url路径-->
+	     <form id="form_upload" class="layui-form" enctype="multipart/form-data">
+			 <div class="layui-form-item">
+				 <input id="upload_file" type="file" name="file"/>
+				 <button class="layui-btn" id="uploadSub" lay-submit lay-filter="uploadSub">上传</button>
+			 </div>
+		</form>
+		<!--截取框坐标点数据保存区，同时也是请求后台截取接口的表单-->
+	    <form id="form_crop" class="layui-form">
+			<div class="layui-form-item">
+				<input id="url" type="hidden" name="srcImg" value="img/upload/test.jpeg"/>
+				<input id="x" type="hidden" name="x" />
+				<input id="y" type="hidden" name="y" />
+				<input id="w" type="hidden" name="width" />
+				<input id="h" type="hidden" name="height" />
+				<button id="btn_crop" class="layui-btn" lay-submit lay-filter="btn_crop">裁剪</button>
+			</div>
+	    </form>
+     </div>
+</div>
+
+
+</body>	
+</html>

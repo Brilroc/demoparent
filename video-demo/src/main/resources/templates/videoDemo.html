@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>电视台</title>
+        <!--引入video.js文件-->
+		<script src="../static/jQuery/jquery-1.12.4.js"></script>
+		<link rel="stylesheet" type="text/css" href="../static/video5.18.4.js/css/video-js.css">
+		<!--<script src="../static/videojs-contrib-hls-master/src/videojs-contrib-hls.js"></script>-->
+		<link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
+		<script src="../static/layui/layui.js"></script>
+		<script src="../static/video5.18.4.js/js/videojs-ie8.min.js"></script>
+		<script src="../static/video5.18.4.js/js/video.min.js"></script>
+		<script src="https://cdn.bootcss.com/videojs-contrib-hls/5.11.0/videojs-contrib-hls.js"></script>
+
+		<style type="text/css">
+			.vjs-paused .vjs-big-play-button,
+			.vjs-paused.vjs-has-started .vjs-big-play-button {
+				display: block;
+			}
+			
+			.video-js .vjs-big-play-button{
+				font-size: 2.5em;
+				line-height: 2.3em;
+				height: 2.5em;
+				width: 2.5em;
+				-webkit-border-radius: 2.5em;
+				-moz-border-radius: 2.5em;
+				border-radius: 2.5em;
+				background-color: #73859f;
+				background-color: rgba(115,133,159,.5);
+				border-width: 0.15em;
+				margin-top: -1.25em;
+				margin-left: -1.75em;
+			}
+			/* 中间的播放箭头 */
+			.vjs-big-play-button .vjs-icon-placeholder {
+				font-size: 1.63em;
+			}
+			/* 加载圆圈 */
+			.vjs-loading-spinner {
+				font-size: 2.5em;
+				width: 2em;
+				height: 2em;
+				border-radius: 1em;
+				margin-top: -1em;
+				margin-left: -1.5em;
+			}
+
+		</style>
+    </head>
+    <body>
+		<video id="example-video"  class="video-js vjs-default-skin vjs-big-play-centered">
+			<!-- RTMP直播源地址:香港卫视-->
+			<!-- <source src="rtmp://live.hkstv.hk.lxdns.com/live/hks1" type="rtmp/flv"> -->
+			<!-- hls直播源地址：CCTV6高清 -->
+			<source src="http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8" type="application/x-mpegURL">
+			<!-- 官方案例MP4 -->
+			<!-- <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4"> -->
+		</video>
+		<div class="layui-btn-container" style="padding-top: 10px;">
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("play")'>播放</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("stop")'>停止</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("reload")'>重载</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("reset")'>重置</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("fastForward")'>快进</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("back")'>后退</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("volumeUp")'>音量+</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("volumeUp")'>音量-</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("fullScreen")'>全屏</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='operation("exitFullScreen")'>退出全屏</button>
+		</div>
+		<div class="layui-btn-container">
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("CCTV1")'>CCTV1高清 </button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("CCTV3")'>CCTV3高清 </button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("CCTV6")'>CCTV6高清 </button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("XHWS")'>香港卫视</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("MGZW")'>美国中文电视</button>
+			<button type="button" class="layui-btn layui-btn-primary  control" onclick='cut("ocean")'>海洋</button>
+			
+		</div>
+    </body>
+	
+	<script type="text/javascript">
+//      	video标签id,
+//      	配置选项(data-setup='{}'),
+//      	videojs初始化完成回调函数
+            var myPlayer = videojs('example-video', { 
+            		"width":"800",
+            		"height":"400",
+            		"poster": "",
+            		"controls": true,
+            		"autoplay" :false,
+            		"techOrder" : [ "html5", "flash" ],
+            		"loop":false,
+            		"muted":false,
+            		"preload": 'metadata'
+            	}, function onPlayerReady(){
+            		var myPlayer = this;
+            		//在回调函数中，this代表当前播放器，
+    				//可以调用方法，也可以绑定事件。
+	            	/**
+	            	 * 事件events    绑定事件用on    移除事件用off
+	            	 */
+	            	this.on('suspend', function() {//延迟下载
+				        console.log("延迟下载")
+				    });
+				    this.on('loadstart', function() { //客户端开始请求数据
+				        console.log("客户端开始请求数据")
+				    });
+				    this.on('progress', function() {//客户端正在请求数据
+				        console.log("客户端正在请求数据")
+				    });
+				    this.on('abort', function() {//客户端主动终止下载（不是因为错误引起）
+				        console.log("客户端主动终止下载")
+				    });
+				    this.on('error', function() {//请求数据时遇到错误
+				        console.log("请求数据时遇到错误")
+				    });
+				    this.on('stalled', function() {//网速失速
+				        console.log("网速失速")
+				    });
+				    this.on('play', function() {//开始播放
+				        console.log("开始播放")
+				    });
+				    this.on('pause', function() {//暂停
+				        console.log("暂停")
+				    });
+				    this.on('loadedmetadata', function() {//成功获取资源长度
+				        console.log("成功获取资源长度")
+				    });
+				    this.on('loadeddata', function() {//渲染播放画面
+				        console.log("渲染播放画面")
+				    });
+				    this.on('waiting', function() {//等待数据，并非错误
+				        console.log("等待数据")
+				    });
+				    this.on('playing', function() {//开始回放
+				        console.log("开始回放")
+				    });
+				    this.on('canplay', function() {//可以播放，但中途可能因为加载而暂停
+				        console.log("可以播放，但中途可能因为加载而暂停")
+				    });
+				    this.on('canplaythrough', function() { //可以播放，歌曲全部加载完毕
+				        console.log("可以播放，歌曲全部加载完毕")
+				    });
+				    this.on('seeking', function() { //寻找中
+				        console.log("寻找中")
+				    });
+				    this.on('seeked', function() {//寻找完毕
+				        console.log("寻找完毕")
+				    });
+				    this.on('timeupdate', function() {//播放时间改变
+				        console.log("播放时间改变")
+				    });
+				    this.on('ended', function() {//播放结束
+				        console.log("播放结束")
+				    });
+				    this.on('ratechange', function() {//播放速率改变
+				        console.log("播放速率改变")
+				    });
+				    this.on('durationchange', function() {//资源长度改变
+				        console.log("资源长度改变")
+				    });
+				    this.on('volumechange', function() {//音量改变
+				        console.log("音量改变")
+				    });
+					this.on('fullscreenchange', function() {//音量改变
+						console.log("全屏改变")
+					});
+            	});
+        	/**
+        	 * 方法
+        	 */
+    		function operation(param){
+    			console.log(param)
+    			if("play"==param){	//开始播放
+    				myPlayer.play();
+    			}else if("stop"==param){	//停止播放
+					console.log("停止播放");
+    				myPlayer.pause();
+    			}else if("fastForward"==param){ //快进
+    				var whereYouAt = myPlayer.currentTime();
+        			myPlayer.currentTime(10+whereYouAt);
+    			}else if("reload"==param){	//重新加载
+    				myPlayer.pause();
+				    myPlayer.load();
+				    myPlayer.play();
+    			}else if("back"==param){	//后退
+    				var whereYouAt = myPlayer.currentTime();
+        			myPlayer.currentTime(whereYouAt-10);
+    			}else if("fullScreen"==param){	//全屏
+    				myPlayer.enterFullScreen();
+    			}else if("exitFullScreen"==param){	//退出全屏
+    				myPlayer.exitFullscreen();
+    			}else if("volumeUp"==param){	//音量加
+    				var howLoudIsIt = myPlayer.volume();
+					console.log(howLoudIsIt);
+    				myPlayer.volume(howLoudIsIt+10);
+    			}else if("volumeDown"==param){	//音量减
+    				var howLoudIsIt = myPlayer.volume();
+    				myPlayer.volume(howLoudIsIt-10);
+    			}else if("reset"==param){	//重置，视频不会播放	
+    				myPlayer.reset();
+    			}
+    		}
+    		function cut(channel){
+    			myPlayer.reset();//重置
+    			if("CCTV1"==channel){	//CCTV1
+    				myPlayer.src({ type: "application/x-mpegURL", src:"http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8" });
+    				myPlayer.load("http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8");
+					myPlayer.play();
+    			}else if("CCTV3"==channel){	//CCTV3
+    				myPlayer.src({ type: "application/x-mpegURL", src:"http://ivi.bupt.edu.cn/hls/cctv3hd.m3u8" });
+    				myPlayer.load("http://ivi.bupt.edu.cn/hls/cctv3hd.m3u8");
+					myPlayer.play();
+    			}else if("CCTV6"==channel){	//CCTV6
+    				myPlayer.src({ type: "application/x-mpegURL", src:"http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8" });
+    				myPlayer.load("http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8");
+					myPlayer.play();
+    			}else if("XHWS"==channel){	//香港卫视
+    				myPlayer.src({ type: "rtmp/flv", src:"rtmp://live.hkstv.hk.lxdns.com/live/hks1" });
+    				myPlayer.load("rtmp://live.hkstv.hk.lxdns.com/live/hks1");
+					myPlayer.play();
+    			}else if("MGZW"==channel){	//美国中文电视
+    				myPlayer.src({ type: "rtmp/flv", src:"rtmp://media3.sinovision.net:1935/live/livestream" });
+    				myPlayer.load("rtmp://media3.sinovision.net:1935/live/livestream");
+					myPlayer.play();
+    			}else if("ocean"==channel){	//官方案例
+    				myPlayer.src({ type: "video/mp4", src:"http://vjs.zencdn.net/v/oceans.mp4" });
+    				myPlayer.load("http://vjs.zencdn.net/v/oceans.mp4");
+					myPlayer.play();
+    			}
+    		}
+			
+        </script>
+
+</html>
